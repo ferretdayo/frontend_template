@@ -8,6 +8,7 @@ var pug = require("gulp-pug");
 
 gulp.task('default', ['sass', 'browser-sync', 'pug', 'watch']);
 
+//sassとpugの監視をして変換処理させる
 gulp.task('watch', () => {
     watch(['./sass/**'], () => {
         gulp.start(['sass']);
@@ -17,6 +18,7 @@ gulp.task('watch', () => {
     })
 });
 
+//ブラウザ表示
 gulp.task('browser-sync', () => {
     browserSync({
         server: {
@@ -24,10 +26,13 @@ gulp.task('browser-sync', () => {
         }
     });
     //ファイルの監視
+    //以下のファイルが変わったらリロードする
 	gulp.watch("./css/**/*.css",   ['reload']);
+	gulp.watch("./js/**/*.js",     ['reload']);
     gulp.watch("./*.html",         ['reload']);
 });
 
+//sassをcssに変換
 gulp.task("sass", () => {
 	gulp.src("./sass/**/*scss")
         .pipe(plumber({
@@ -37,12 +42,16 @@ gulp.task("sass", () => {
 		.pipe(gulp.dest("./css"))
 });
 
+//pugをhtmlに変換
 gulp.task("pug", () => {
+    var option = {
+        pretty: true
+    }
     gulp.src("./pug/**/*.pug")
         .pipe(plumber({
             errorHandler: notify.onError("Error: <%= error.message %>")
         }))
-        .pipe(pug())
+        .pipe(pug(option))
         .pipe(gulp.dest("./"))
 });
 
