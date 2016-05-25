@@ -14,7 +14,7 @@ gulp.task('watch', () => {
     });
     gulp.watch(['./pug/**'], () => {
         gulp.start(['pug']);
-    })
+    });
 });
 
 //ブラウザ表示
@@ -26,7 +26,6 @@ gulp.task('browser-sync', () => {
     });
     //ファイルの監視
     //以下のファイルが変わったらリロードする
-	gulp.watch("./css/**/*.css",   ['reload']);
 	gulp.watch("./js/**/*.js",     ['reload']);
     gulp.watch("./*.html",         ['reload']);
 });
@@ -39,6 +38,8 @@ gulp.task("sass", () => {
         }))
 		.pipe(sass())
 		.pipe(gulp.dest("./css"))
+        //reloadせずにinjectする
+        .pipe(browserSync.stream())
 });
 
 //pugをhtmlに変換
@@ -55,6 +56,6 @@ gulp.task("pug", () => {
 });
 
 //ブラウザリロード処理
-gulp.task('reload', function () {
+gulp.task('reload', () => {
     browserSync.reload();
 });
